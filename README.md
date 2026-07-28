@@ -1,4 +1,4 @@
-# 🚢 Titanic Survival Classification API
+# 🚢 Titanic Survival Classification
 
 A production-ready REST API built with **FastAPI** that predicts passenger survival on the Titanic using a trained **TensorFlow/Keras** neural network.
 
