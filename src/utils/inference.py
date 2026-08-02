@@ -21,15 +21,17 @@ def predict_survival(passengers: List[PassengerData]):
         # Transform
         df_preprocessed = preprocessor.transform(df)
 
-        # Predict
-        predictions = (model.predict(df_preprocessed) > 0.5).astype('int32').flatten()
+        # Predict — keep the raw probability, then threshold for the label
+        raw_probabilities = model.predict(df_preprocessed).flatten()
+        predictions = (raw_probabilities > 0.5).astype('int32')
 
         survived_count = int(predictions.sum())
 
         pred_response = PredictionResponse(predictions=[
             PassengerPrediction(
                 passenger_id=passengers[i].passenger_id,
-                predicted="Survived" if pred == 1 else "Not Survived"
+                predicted="Survived" if pred == 1 else "Not Survived",
+                probability=round(float(raw_probabilities[i]), 4)
             )
             for i, pred in enumerate(predictions)
         ])
