@@ -6,6 +6,16 @@ A production-ready REST API built with **FastAPI** that predicts passenger survi
 
 This project exposes a trained deep learning model through a simple, well-structured API. Given passenger details (age, fare, class, etc.), the service returns a survival prediction for each passenger.
 
+
+> ⚠️ **Security note:** the `X-API-Key` below is a **demo key** shared for evaluation purposes only. If this repository is public, rotate the key (set a new `SECRET_KEY_TOKEN` in your Hugging Face Space secrets) so this value stops working. Never rely on a key that has appeared in a public README for anything beyond a quick demo.
+
+```
+Demo X-API-Key: c0c2d9d05029aed5d5174ff5ff8e6d88
+```
+
+---
+
+
 ## 🏗️ Project Structure
 
 ```
