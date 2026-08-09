@@ -14,8 +14,4 @@ dependencies = [
     "supabase==2.31.0",
     "scikit-learn==1.6.1",
     "pandas==2.2.3",
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> 53c0934 (update all project)
