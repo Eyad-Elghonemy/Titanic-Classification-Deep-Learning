@@ -1,83 +1,99 @@
 <div align="center">
 
-<img src="logo_circle.png" alt="Titanic Survival Classification" width="300"/>
+<img src="logo_circle.png" alt="Titanic Survival Classification" width="200" />
 
-![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.139.2-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21.0-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
-![Pydantic](https://img.shields.io/badge/Pydantic-2.13.4-E92063?style=for-the-badge&logo=pydantic&logoColor=white)
-![Uvicorn](https://img.shields.io/badge/Uvicorn-0.51.0-2C3E50?style=for-the-badge)
+# RMS · 1912 — Titanic Survival Classification
+**A production-grade deep learning API that predicts passenger survival on the RMS Titanic, built with FastAPI and TensorFlow/Keras.**
 
-**The AI engine predicting passenger survival on the RMS Titanic using a trained deep learning model, served through a production-ready REST API.**
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21.0-FF6F00?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-Validation-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![Uvicorn](https://img.shields.io/badge/Uvicorn-ASGI-2C3E50?logo=uvicorn&logoColor=white)](https://www.uvicorn.org/)
+[![joblib](https://img.shields.io/badge/joblib-Serialization-4B8BBE?logo=python&logoColor=white)](https://joblib.readthedocs.io/)
 
 </div>
 
 ---
 
-## 📋 Overview
+## What is this?
 
-This is a production-ready REST API built with **FastAPI** that predicts passenger survival on the Titanic using a trained **TensorFlow/Keras** neural network.
-
-Given passenger details (age, fare, class, family info, etc.), the service returns a survival prediction for each passenger — making it easy to plug a trained ML model into any downstream application, dashboard, or analytics pipeline.
-
-### ✨ Key Features
-
-- ⚡ **Fast inference** — model and preprocessor are loaded once at startup, not per request
-- 📦 **Batch predictions** — classify a single passenger or an entire list in one call
-- 🧩 **Clean architecture** — clear separation between config, inference logic, and request/response schemas
-- 🔒 **Environment-based configuration** via `.env`
-- 📖 **Auto-generated interactive docs** (Swagger UI & ReDoc) out of the box
-- 🛡️ **Robust error handling** with descriptive HTTP error responses
-
-
---- 
----
-
-> ⚠️ **Security note:** the `X-API-Key` below is a **demo key** shared for evaluation purposes only. If this repository is public, rotate the key (set a new `SECRET_KEY_TOKEN` in your Hugging Face Space secrets) so this value stops working. Never rely on a key that has appeared in a public README for anything beyond a quick demo.
-
-```
-Demo X-API-Key: c0c2d9d05029aed5d5174ff5ff8e6d88
-```
-
+A production-ready REST API that takes raw passenger data (age, fare, class, family info, embarkation port) and returns a survival prediction for each passenger using a trained **Keras neural network**. Designed to plug cleanly into any downstream dashboard, analytics pipeline, or application.
 
 ---
 
+## Features
 
-## 🏗️ Project Structure
+| Feature | Detail |
+|---|---|
+| ⚡ **Fast inference** | Model and preprocessor loaded once at startup — never per request |
+| 📦 **Batch predictions** | Classify a single passenger or an entire list in one call |
+| 🧩 **Clean architecture** | Config, inference logic, and request/response schemas fully separated |
+| 🔒 **Env-based config** | All secrets loaded from `.env`, never hardcoded |
+| 📖 **Auto-generated docs** | Swagger UI & ReDoc available out of the box |
+| 🛡️ **Robust error handling** | Descriptive HTTP error responses on any inference failure |
+
+---
+
+## Project Structure
 
 ```
 .
-├── .env                        # Environment variables (not committed)
-├── .env.example                # Environment variables template
+├── main.py                       # FastAPI application entry point
+├── requirements.txt              # Dependencies
+├── .env.example                  # Environment variables template
+├── .env                          # Environment variables (never committed)
 ├── .gitignore
-├── main.py                     # FastAPI application entry point
 ├── README.md
-├── requirements.txt
-│
 └── src/
     ├── __init__.py
-    │
     ├── artifacts/
-    │   ├── best_model.keras    # Trained Keras model
-    │   └── preprocessor.joblib # Fitted preprocessing pipeline
-    │
+    │   ├── best_model.keras      # Trained Keras neural network
+    │   └── preprocessor.joblib   # Fitted preprocessing pipeline
     ├── notebooks/
-    │   └── notebook.ipynb      # Model training & experimentation
-    │
+    │   └── notebook.ipynb        # Model training & experimentation
     └── utils/
-        ├── config.py           # App config, model & preprocessor loading
-        ├── inference.py         # Prediction logic
-        ├── requests.py          # Pydantic request schemas
-        ├── response.py          # Pydantic response schemas
-        └── __init__.py
+        ├── __init__.py
+        ├── config.py             # App config, model & preprocessor loading
+        ├── inference.py          # Prediction logic
+        ├── requests.py           # Pydantic request schemas
+        └── response.py           # Pydantic response schemas
 ```
 
-## ⚙️ Requirements
+---
+
+## Model & Preprocessing Pipeline
+
+The model is a neural network trained on the classic Titanic dataset. See `src/notebooks/notebook.ipynb` for the full training pipeline including feature engineering.
+
+**Engineered features:**
+
+| Feature | Formula | Meaning |
+|---|---|---|
+| `family_size` | `parch + sibsp + 1` | Total family members aboard |
+| `is_alone` | `1 if family_size == 1` | Whether the passenger traveled alone |
+
+**Inference flow:**
+
+```
+Raw passenger JSON
+      ↓ Pydantic validation
+Feature engineering (family_size, is_alone)
+      ↓ preprocessor.joblib (fitted scaler + encoder)
+Transformed feature matrix
+      ↓ best_model.keras
+Raw predictions
+      ↓ label mapping
+"Survived" / "Not Survived"
+```
+
+---
+
+## Requirements
 
 - Python 3.12+
-- pip
 
-### Dependencies
+**Key dependencies:**
 
 ```
 uvicorn==0.51.0
@@ -89,7 +105,9 @@ python-dotenv==1.2.2
 python-multipart==0.0.32
 ```
 
-## 🚀 Getting Started
+---
+
+## Installation & Running
 
 ### 1. Clone the repository
 
@@ -98,13 +116,15 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
 
 ```bash
 python -m venv venv
+
 # Windows
 venv\Scripts\activate
-# macOS/Linux
+
+# macOS / Linux
 source venv/bin/activate
 ```
 
@@ -116,11 +136,11 @@ pip install -r requirements.txt
 
 ### 4. Configure environment variables
 
-Copy `.env.example` to `.env` and fill in the values:
-
 ```bash
 cp .env.example .env
 ```
+
+Edit `.env`:
 
 ```env
 APP_NAME="Titanic-Survived-Classification"
@@ -134,29 +154,30 @@ API_SECRET_KEY=your-secret-key-here
 uvicorn main:app --reload
 ```
 
-The API will be available at **http://127.0.0.1:8000**
+| URL | Purpose |
+|---|---|
+| `http://127.0.0.1:8000` | API base URL |
+| `http://127.0.0.1:8000/docs` | Swagger UI (interactive docs) |
+| `http://127.0.0.1:8000/redoc` | ReDoc (alternative docs) |
 
-Interactive API docs (Swagger UI): **http://127.0.0.1:8000/docs**
-Alternative docs (ReDoc): **http://127.0.0.1:8000/redoc**
+---
 
-## 📡 API Endpoints
+## API Reference
 
 ### `GET /`
-
-Health check endpoint.
+Health check — no authentication required.
 
 **Response**
 ```json
-{
-  "message": "Up & Running"
-}
+{ "message": "Up & Running" }
 ```
 
+---
+
 ### `POST /classify`
+Predict survival for one or more passengers in a single call.
 
-Predicts survival for a list of passengers.
-
-**Request Body**
+**Request body** — a JSON array of passenger objects:
 
 ```json
 [
@@ -170,7 +191,6 @@ Predicts survival for a list of passengers.
     "sibsp": 1,
     "pclass": 3
   },
-
   {
     "passenger_id": 2,
     "age": 12.0,
@@ -184,73 +204,86 @@ Predicts survival for a list of passengers.
 ]
 ```
 
-| Field          | Type    | Description                                  |
-|----------------|---------|-----------------------------------------------|
-| `passenger_id` | int     | Unique passenger identifier                   |
-| `age`          | float   | Passenger age                                 |
-| `fare`         | float   | Ticket fare                                   |
-| `sex`          | string  | `male` or `female`                            |
-| `embarked`     | string  | Port of embarkation: `S`, `C`, or `Q`         |
-| `parch`        | int     | Number of parents/children aboard             |
-| `sibsp`        | int     | Number of siblings/spouses aboard             |
-| `pclass`       | int     | Passenger class (1, 2, or 3)                  |
+**Field reference**
 
-**Response**
+| Field | Type | Description |
+|---|---|---|
+| `passenger_id` | int | Unique passenger identifier |
+| `age` | float | Passenger age |
+| `fare` | float | Ticket fare paid |
+| `sex` | string | `male` or `female` |
+| `embarked` | string | Port of embarkation: `S` (Southampton), `C` (Cherbourg), `Q` (Queenstown) |
+| `parch` | int | Number of parents / children aboard |
+| `sibsp` | int | Number of siblings / spouses aboard |
+| `pclass` | int | Passenger class: `1`, `2`, or `3` |
+
+**Success response**
 
 ```json
 {
   "predictions": [
-    {
-      "passenger_id": 1,
-      "predicted": "Survived"
-    },
-    {
-      "passenger_id": 2,
-      "predicted": "Not Survived"
-    }
+    { "passenger_id": 1, "predicted": "Survived" },
+    { "passenger_id": 2, "predicted": "Not Survived" }
   ]
 }
 ```
 
-## 🧠 Model
-
-The model is a neural network trained on the classic Titanic dataset (see `src/notebooks/notebook.ipynb` for the full training pipeline, including feature engineering and preprocessing).
-
-**Engineered features:**
-
-- **family_size** — total family members aboard (`parch + sibsp + 1`)
-- **is_alone** — whether the passenger was traveling alone
-
-**Pipeline:**
-
-1. Raw passenger data is validated with Pydantic schemas
-2. Features are engineered and transformed using the fitted `preprocessor.joblib`
-3. The transformed features are fed into `best_model.keras` for inference
-4. Predictions are mapped back to human-readable labels (`Survived` / `Not Survived`)
-
-The fitted preprocessing pipeline (`preprocessor.joblib`) and trained model (`best_model.keras`) are loaded once at startup for fast inference.
-
-## 🛡️ Error Handling
-
-Any failure during inference returns an HTTP `500` response with details:
+**Error response**
 
 ```json
-{
-  "detail": "Error making predictions: <error message>"
-}
+{ "detail": "Error making predictions: <error message>" }
 ```
-<<<<<<< HEAD
-=======
 
-## 🗺️ Roadmap
+Any inference failure returns HTTP `500` with a descriptive message — never a raw stack trace.
 
+**cURL example**
+
+```bash
+curl -X POST "http://127.0.0.1:8000/classify" \
+  -H "Content-Type: application/json" \
+  -d '[
+        {
+          "passenger_id": 1,
+          "age": 22.0, "fare": 7.25, "sex": "female",
+          "embarked": "S", "parch": 0, "sibsp": 1, "pclass": 3
+        }
+      ]'
+```
+
+---
+
+## Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `APP_NAME` | App title shown in FastAPI docs and the `/` welcome message |
+| `VERSION` | API version shown in FastAPI docs |
+| `API_SECRET_KEY` | Secret key for future auth middleware |
+
+`.env` is listed in `.gitignore` and is never committed.
+
+---
+
+## Roadmap
+
+- [ ] Add `X-API-Key` authentication middleware using `API_SECRET_KEY`
 - [ ] Add model versioning & A/B testing support
-- [ ] Add authentication middleware using `API_SECRET_KEY`
 - [ ] Add request/response logging & monitoring
 - [ ] Containerize with Docker for easier deployment
 - [ ] Add unit & integration tests
 
-## 📄 License
+---
 
-This project is provided as-is for educational and demonstration purposes.
->>>>>>> 53c0934 (update all project)
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **ML** | TensorFlow / Keras, scikit-learn, joblib |
+| **API** | FastAPI, Uvicorn, Pydantic |
+| **Config** | python-dotenv |
+
+---
+
+<div align="center">
+<sub>RMS · 1912 · built with FastAPI, TensorFlow &amp; Pydantic</sub>
+</div>
