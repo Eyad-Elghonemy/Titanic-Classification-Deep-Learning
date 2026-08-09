@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="social_banner.png" alt="Titanic Survival Classification" width="600"/>
+<img src="logo_circle.png" alt="Titanic Survival Classification" width="300"/>
 
 ![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.139.2-009688?style=for-the-badge&logo=fastapi&logoColor=white)
@@ -39,13 +39,6 @@ Given passenger details (age, fare, class, family info, etc.), the service retur
 Demo X-API-Key: c0c2d9d05029aed5d5174ff5ff8e6d88
 ```
 
-
-
-> ⚠️ **Security note:** the `X-API-Key` below is a **demo key** shared for evaluation purposes only. If this repository is public, rotate the key (set a new `SECRET_KEY_TOKEN` in your Hugging Face Space secrets) so this value stops working. Never rely on a key that has appeared in a public README for anything beyond a quick demo.
-
-```
-Demo X-API-Key: c0c2d9d05029aed5d5174ff5ff8e6d88
-```
 
 ---
 
