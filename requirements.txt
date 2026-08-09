@@ -6,5 +6,9 @@ joblib==1.5.3
 python-dotenv==1.2.2
 python-multipart==0.0.32
 supabase==2.31.0
+<<<<<<< HEAD
 scikit-learn==1.6.1
 pandas==2.2.3
+=======
+scikit-learn==1.6.1
+>>>>>>> 53c0934 (update all project)
