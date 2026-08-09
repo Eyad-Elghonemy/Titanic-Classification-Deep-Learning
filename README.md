@@ -21,9 +21,6 @@
 A production-ready REST API that takes raw passenger data (age, fare, class, family info, embarkation port) and returns a survival prediction for each passenger using a trained **Keras neural network**. Designed to plug cleanly into any downstream dashboard, analytics pipeline, or application.
 
 ---
-
-
---- 
 ---
 
 > ⚠️ **Security note:** the `X-API-Key` below is a **demo key** shared for evaluation purposes only. If this repository is public, rotate the key (set a new `SECRET_KEY_TOKEN` in your Hugging Face Space secrets) so this value stops working. Never rely on a key that has appeared in a public README for anything beyond a quick demo.
